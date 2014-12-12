@@ -1,0 +1,31 @@
+buildscript {
+    dependencies {
+        classpath files("dogfood/gradle-release-plugin-0.0.1.jar")
+    }
+}
+
+plugins {
+  id 'nu.studer.plugindev' version '1.0.3'
+}
+apply plugin: 'groovy'
+apply plugin: 'ch.netzwerg.release'
+
+group = 'ch.netzwerg'
+
+repositories {
+    jcenter()
+}
+
+plugindev {
+    pluginName 'gradle-release-plugin'
+    pluginDescription 'Gradle plugin providing very minimal release version numbering including Git repo tagging'
+    pluginImplementationClass 'ch.netzwerg.gradle.release.ReleasePlugin'
+    pluginLicenses 'Apache-2.0'
+    pluginTags 'gradle', 'plugin', 'release'
+    authorId 'netzwerg'
+    authorName 'Rahel Lüthy'
+    authorEmail 'rahel.luethy@gmail.com'
+    projectUrl 'https://github.com/netzwerg/gradle-release-plugin'
+    projectInceptionYear '2014'
+    done()
+}
