@@ -3,15 +3,15 @@ package ch.netzwerg.gradle.release
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 import java.util.regex.Matcher
 
 class ReleasePlugin implements Plugin<Project> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReleasePlugin.class)
-    private static final String VERSION_FILE_NAME = "version.txt"
+    private static final LOGGER = LoggerFactory.getLogger(ReleasePlugin.class)
+    private static final VERSION_FILE_NAME = "version.txt"
+    private static final RELEASE_TASK_DESC = "Creates a tagged non-SNAPSHOT release"
 
     private Project project
 
@@ -28,13 +28,9 @@ class ReleasePlugin implements Plugin<Project> {
             project.ext.versionFile.text = project.version
         }
 
-        def clean = project.tasks.getByName("clean")
-        def build = project.tasks.getByName("build")
-
         Task release = project.tasks.create("release")
-        release.description = 'Creates non-SNAPSHOT distribution, tags release in VCS, and prepares version for next release cycle.'
-        release.dependsOn(clean, build)
-        release.doLast{
+        release.description = RELEASE_TASK_DESC
+        release.doLast {
             commitVersionFile("Release v$project.version")
             createReleaseTag()
             String nextVersion = getNextVersion()
