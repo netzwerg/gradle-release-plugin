@@ -25,7 +25,7 @@ locally and include it as a jar (see `build.gradle` for an example, this plugin 
 
 # Acknowledgements
 
-Uses Etienne Studer's excellent [plugindev](https://github.com/etiennestuder/gradle-plugindev-plugin).
+Uses Etienne Studer's excellent [plugindev](https://github.com/etiennestuder/gradle-plugindev-plugin) plugin.
 
 # License
 
