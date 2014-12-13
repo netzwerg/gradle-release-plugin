@@ -1,6 +1,6 @@
 buildscript {
     dependencies {
-        classpath files("dogfood/gradle-release-plugin-0.0.2.jar")
+        classpath files("dogfood/gradle-release-plugin-0.0.3-SNAPSHOT.jar")
     }
 }
 
