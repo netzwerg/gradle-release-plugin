@@ -27,8 +27,11 @@ class ReleaseTask extends DefaultTask {
 
     static final RELEASE_TASK_DESC = 'Creates a tagged non-SNAPSHOT release'
 
+    boolean push
+
     ReleaseTask() {
         description = RELEASE_TASK_DESC
+        push = false
     }
 
     @TaskAction
@@ -38,12 +41,14 @@ class ReleaseTask extends DefaultTask {
         String nextVersion = getNextVersion(project.version as String)
         project.ext.versionFile.text = nextVersion
         commitVersionFile("Prepare next release v$nextVersion")
-        pushChanges()
+        if (push) {
+            pushChanges()
+        }
     }
 
     def commitVersionFile(String msg) {
         LOGGER.debug("Committing version file: $msg")
-        git 'commit', '-m', msg, VERSION_FILE_NAME
+        git 'commit', '-m', msg, project.ext.versionFile.name
     }
 
     def createReleaseTag() {
