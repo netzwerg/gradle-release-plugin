@@ -25,8 +25,8 @@ import java.util.regex.Matcher
 class ReleasePlugin implements Plugin<Project> {
 
     private static final LOGGER = LoggerFactory.getLogger(ReleasePlugin.class)
-    private static final VERSION_FILE_NAME = "version.txt"
-    private static final RELEASE_TASK_DESC = "Creates a tagged non-SNAPSHOT release"
+    static final VERSION_FILE_NAME = "version.txt"
+    static final RELEASE_TASK_DESC = "Creates a tagged non-SNAPSHOT release"
 
     private Project project
 
@@ -48,7 +48,7 @@ class ReleasePlugin implements Plugin<Project> {
         release.doLast {
             commitVersionFile("Release v$project.version")
             createReleaseTag()
-            String nextVersion = getNextVersion()
+            String nextVersion = getNextVersion(project.version as String)
             project.ext.versionFile.text = nextVersion
             commitVersionFile("Prepare next release v$nextVersion")
             pushChanges()
@@ -66,9 +66,9 @@ class ReleasePlugin implements Plugin<Project> {
         git 'tag', '-a', tagName, "-m Release $tagName"
     }
 
-    def getNextVersion() {
+    def static getNextVersion(String currentVersion) {
         String pattern = /(\d+)([^\d]*$)/
-        Matcher matcher = project.version =~ pattern
+        Matcher matcher = currentVersion =~ pattern
         String nextVersion = matcher.replaceAll("${(matcher[0][1] as int) + 1}${matcher[0][2]}") + "-SNAPSHOT"
         return nextVersion
     }
