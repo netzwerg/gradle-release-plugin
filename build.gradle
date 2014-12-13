@@ -12,7 +12,7 @@ apply plugin: 'ch.netzwerg.release'
 
 group = 'ch.netzwerg'
 
-release.dependsOn(clean, build)
+release.dependsOn(build)
 
 repositories {
     jcenter()
