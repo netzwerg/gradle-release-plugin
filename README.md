@@ -36,7 +36,7 @@ In addition, it provides a `release` task which:
 * Tags Git repo (e.g. `v0.0.1`)
 * Increments version number in `version.txt` to next SNAPSHOT (e.g. `0.0.2-SNAPSHOT`)
 * Again commits modified `version.txt`
-* Pushes changes to Git remote
+* Optionally pushes changes to Git remote
 
 **Important**: The configuration phase is only executed if the `release` task is explicitly passed to Gradle as a
 start parameter.
