@@ -39,14 +39,7 @@ class ReleasePluginTest {
     public void apply() {
         assertEquals(TEST_VERSION_NUMBER.trim(), project.version)
         assertNotNull(project.ext.versionFile)
-
-        def release = project.tasks.release
-        assertEquals(ReleasePlugin.RELEASE_TASK_DESC, release.description)
-    }
-
-    @Test
-    public void getNextVersion() {
-        assertEquals('1.2.4-SNAPSHOT', plugin.getNextVersion('1.2.3'))
+        assertNotNull(project.tasks.findByName(ReleasePlugin.RELEASE_TASK_NAME))
     }
 
 }
