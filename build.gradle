@@ -1,11 +1,6 @@
-buildscript {
-    dependencies {
-        classpath files("dogfood/gradle-release-plugin-0.0.3-SNAPSHOT.jar")
-    }
-}
-
 plugins {
-  id 'nu.studer.plugindev' version '1.0.3'
+    id 'nu.studer.plugindev' version '1.0.3'
+    id 'ch.netzwerg.release' version '0.1.0'
 }
 apply plugin: 'groovy'
 apply plugin: 'ch.netzwerg.release'
