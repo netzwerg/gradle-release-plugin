@@ -46,9 +46,13 @@ handle to it via the `project.ext.versionFile` property.
 
 # Usage
 
-The plugin is still in a very basic state and is not yet published on Bintray (see issue
-[#1](https://github.com/netzwerg/gradle-release-plugin/issues/1)). Feel free to build it locally and include it as a
-jar (see `build.gradle` for an example, this plugin project is eating its own dog food).
+The plugin is hosted on [Bintray](https://bintray.com/netzwerg/gradle-plugins/gradle-release-plugin) and can be applied as follows (Gradle 2.1 and higher):
+
+```groovy
+plugins {
+  id 'ch.netzwerg.release' version '0.1.0'
+}
+```
 
 # Acknowledgements
 
