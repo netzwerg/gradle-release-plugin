@@ -54,6 +54,15 @@ plugins {
 }
 ```
 
+# Configuration
+
+```groovy
+release {
+    dependsOn build
+    push = true // e.g. useful when triggering release task on CI server
+}
+```
+
 # Acknowledgements
 
 Uses Etienne Studer's excellent [plugindev](https://github.com/etiennestuder/gradle-plugindev-plugin) plugin.
