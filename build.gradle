@@ -31,3 +31,9 @@ plugindev {
     projectInceptionYear '2014'
     done()
 }
+
+bintray {
+    user = "$BINTRAY_USER"
+    key = "$BINTRAY_API_KEY"
+    pkg.repo = 'gradle-plugins'
+}
