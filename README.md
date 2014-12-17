@@ -5,7 +5,7 @@ Gradle plugin providing very minimal release version numbering.
 
 # Introduction
 
-The plugin assumes a `MAJOR.MINOR.PATCH` version pattern kept in a `version.txt` file.
+The plugin assumes a `MAJOR.MINOR.PATCH[-SNAPSHOT]` version pattern kept in a `version.txt` file.
 In contrast to other release plugins which offer a wealth of features and configuration
 options, this plugin is intentionally kept simple.
 
