@@ -39,6 +39,7 @@ class ReleasePluginTest {
     public void apply() {
         assertEquals(TEST_VERSION_NUMBER.trim(), project.version)
         assertNotNull(project.ext.versionFile)
+        assertNotNull(project.extensions.findByName(ReleasePlugin.RELEASE_EXTENSION_NAME))
         assertNotNull(project.tasks.findByName(ReleasePlugin.RELEASE_TASK_NAME))
     }
 

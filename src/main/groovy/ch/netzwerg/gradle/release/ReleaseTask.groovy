@@ -27,11 +27,8 @@ class ReleaseTask extends DefaultTask {
 
     static final RELEASE_TASK_DESC = 'Creates a tagged non-SNAPSHOT release'
 
-    boolean push
-
     ReleaseTask() {
         description = RELEASE_TASK_DESC
-        push = false
     }
 
     @TaskAction
@@ -41,7 +38,8 @@ class ReleaseTask extends DefaultTask {
         String nextVersion = getNextVersion(project.version as String)
         project.ext.versionFile.text = nextVersion
         commitVersionFile("Prepare next release v$nextVersion")
-        if (push) {
+        ReleaseExtension releaseExtension = project.getExtensions().getByType(ReleaseExtension.class)
+        if (releaseExtension.push) {
             pushChanges(tag)
         }
     }

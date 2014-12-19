@@ -17,14 +17,21 @@ package ch.netzwerg.gradle.release
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.slf4j.LoggerFactory
 
 class ReleasePlugin implements Plugin<Project> {
 
+    private static final LOGGER = LoggerFactory.getLogger(ReleasePlugin.class)
+
     static final VERSION_FILE_NAME = 'version.txt'
     static final RELEASE_TASK_NAME = 'release'
+    static final RELEASE_EXTENSION_NAME = 'release'
 
     @Override
     void apply(Project project) {
+        def releaseExtension = project.extensions.create(RELEASE_EXTENSION_NAME, ReleaseExtension, this, project)
+        LOGGER.debug("Registered extension '$RELEASE_EXTENSION_NAME'")
+
         project.ext.versionFile = project.file(VERSION_FILE_NAME)
         project.version = project.ext.versionFile.text.trim()
 
@@ -33,7 +40,9 @@ class ReleasePlugin implements Plugin<Project> {
             project.ext.versionFile.text = project.version
         }
 
-        project.tasks.create(RELEASE_TASK_NAME, ReleaseTask.class)
+        def releaseTask = project.tasks.create(RELEASE_TASK_NAME, ReleaseTask.class)
+        LOGGER.debug("Registered task '$RELEASE_TASK_NAME'")
+        releaseTask.dependsOn({ releaseExtension.dependsOn })
     }
 
 }
