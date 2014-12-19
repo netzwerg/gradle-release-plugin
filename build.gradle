@@ -3,7 +3,6 @@ plugins {
     id 'ch.netzwerg.release' version '0.1.0'
 }
 apply plugin: 'groovy'
-apply plugin: 'ch.netzwerg.release'
 
 group = 'ch.netzwerg'
 
