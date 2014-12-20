@@ -29,20 +29,23 @@ class ReleasePlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
-        def releaseExtension = project.extensions.create(RELEASE_EXTENSION_NAME, ReleaseExtension, this, project)
+        def releaseExtension = project.extensions.create(RELEASE_EXTENSION_NAME, ReleaseExtension.class)
         LOGGER.debug("Registered extension '$RELEASE_EXTENSION_NAME'")
-
-        project.ext.versionFile = project.file(VERSION_FILE_NAME)
-        project.version = project.ext.versionFile.text.trim()
-
-        if (project.gradle.startParameter.taskNames.contains(RELEASE_TASK_NAME)) {
-            project.version -= '-SNAPSHOT'
-            project.ext.versionFile.text = project.version
-        }
 
         def releaseTask = project.tasks.create(RELEASE_TASK_NAME, ReleaseTask.class)
         LOGGER.debug("Registered task '$RELEASE_TASK_NAME'")
         releaseTask.dependsOn({ releaseExtension.dependsOn })
+
+        project.ext.versionFile = project.file(VERSION_FILE_NAME)
+        project.version = project.ext.versionFile.text.trim()
+
+        project.afterEvaluate {
+            if (project.gradle.startParameter.taskNames.contains(RELEASE_TASK_NAME)) {
+                project.version -= releaseExtension.suffix
+                LOGGER.debug("Set project.version to $project.version")
+                project.ext.versionFile.text = project.version
+            }
+        }
     }
 
 }

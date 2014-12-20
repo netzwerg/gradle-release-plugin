@@ -8,7 +8,7 @@ class ReleaseTaskTest {
 
     @Test
     public void getNextVersion() {
-        assertEquals('1.2.4-SNAPSHOT', ReleaseTask.getNextVersion('1.2.3'))
+        assertEquals('1.2.4-SNAPSHOT', ReleaseTask.getNextVersion('1.2.3', '-SNAPSHOT'))
     }
 
 }

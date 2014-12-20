@@ -35,10 +35,10 @@ class ReleaseTask extends DefaultTask {
     def release() {
         commitVersionFile("Release v$project.version")
         String tag = createReleaseTag()
-        String nextVersion = getNextVersion(project.version as String)
+        ReleaseExtension releaseExtension = project.getExtensions().getByType(ReleaseExtension.class)
+        String nextVersion = getNextVersion(project.version as String, releaseExtension.suffix)
         project.ext.versionFile.text = nextVersion
         commitVersionFile("Prepare next release v$nextVersion")
-        ReleaseExtension releaseExtension = project.getExtensions().getByType(ReleaseExtension.class)
         if (releaseExtension.push) {
             pushChanges(tag)
         }
@@ -56,10 +56,10 @@ class ReleaseTask extends DefaultTask {
         return tagName
     }
 
-    def static getNextVersion(String currentVersion) {
+    def static getNextVersion(String currentVersion, String suffix) {
         String pattern = /(\d+)([^\d]*$)/
         Matcher matcher = currentVersion =~ pattern
-        String nextVersion = matcher.replaceAll("${(matcher[0][1] as int) + 1}${matcher[0][2]}") + "-SNAPSHOT"
+        String nextVersion = matcher.replaceAll("${(matcher[0][1] as int) + 1}${matcher[0][2]}") + suffix
         return nextVersion
     }
 
