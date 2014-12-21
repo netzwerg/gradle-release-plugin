@@ -46,20 +46,47 @@ handle to it via the `project.ext.versionFile` property.
 
 # Usage
 
-The plugin is hosted on [Bintray](https://bintray.com/netzwerg/gradle-plugins/gradle-release-plugin) and can be applied as follows (Gradle 2.1 and higher):
+1. Create a `version.txt` (with e.g. `0.1.0-SNAPSHOT`) right next to your build script
+2. Apply the plugin in your build script (see below)
+3. Call `gradle clean release`
+
+# Applying the plugin
+
+The plugin is hosted on [Bintray](https://bintray.com/netzwerg/gradle-plugins/gradle-release-plugin) and can be applied
+as follows:
+
+## New plugin mechanism (as of Gradle 2.1):
 
 ```groovy
 plugins {
-  id 'ch.netzwerg.release' version '0.1.0'
+  id "ch.netzwerg.release" version "x.y.z"
 }
+```
+
+## Older Gradle versions:
+
+```groovy
+buildscript {
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    classpath 'ch.netzwerg:gradle-release-plugin:x.y.z'
+  }
+}
+apply plugin: 'ch.netzwerg.release'
 ```
 
 # Configuration
 
+This plugin follows a "no surprise" policy. Consequently, no configuration is needed in the majority of cases. The
+following snippet illustrates all configuration options, their default values, and possible alternatives:
+
 ```groovy
 release {
-    dependsOn build
-    push = true // e.g. useful when triggering release task on CI server
+  dependsOn build // 'distZip' could e.g be used in combination with the 'application' plugin
+  push = false // 'true' would e.g. be useful when triggering the release task on a CI server
+  suffix = '-SNAPSHOT' // '.DEV' or '' (empty) could be useful alternatives
 }
 ```
 
