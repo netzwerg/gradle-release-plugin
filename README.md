@@ -59,7 +59,7 @@ as follows:
 
 ```groovy
 plugins {
-  id "ch.netzwerg.release" version "x.y.z"
+  id 'ch.netzwerg.release' version 'x.y.z'
 }
 ```
 
