@@ -1,12 +1,10 @@
 plugins {
     id 'nu.studer.plugindev' version '1.0.3'
-    id 'ch.netzwerg.release' version '0.1.0'
+    id 'ch.netzwerg.release' version '0.2.0'
 }
 apply plugin: 'groovy'
 
 group = 'ch.netzwerg'
-
-release.dependsOn(build)
 
 repositories {
     jcenter()
