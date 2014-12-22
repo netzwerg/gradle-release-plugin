@@ -1,5 +1,7 @@
 language: groovy
 env:
   - TERM=dumb
+install:
+  - /bin/true
 script:
   - ./gradlew -PBINTRAY_USER -PBINTRAY_API_KEY build
