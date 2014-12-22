@@ -1,1 +1,5 @@
 language: groovy
+env:
+  - TERM=dumb
+script:
+  - ./gradlew -PBINTRAY_USER -PBINTRAY_API_KEY build
