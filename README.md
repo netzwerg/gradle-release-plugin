@@ -1,4 +1,4 @@
-gradle-release-plugin
+gradle-release-plugin [![Build Status](https://travis-ci.org/netzwerg/gradle-release-plugin.svg?branch=master)](https://travis-ci.org/netzwerg/gradle-release-plugin.svg)
 =====================
 
 Gradle plugin providing very minimal release version numbering.
