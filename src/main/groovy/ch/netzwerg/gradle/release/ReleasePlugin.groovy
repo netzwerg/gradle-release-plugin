@@ -29,7 +29,9 @@ class ReleasePlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
-        def releaseExtension = project.extensions.create(RELEASE_EXTENSION_NAME, ReleaseExtension.class)
+        def factory = new PublicationFactory()
+        def publications = project.container(Publication, factory)
+        def releaseExtension = project.extensions.create(RELEASE_EXTENSION_NAME, ReleaseExtension, publications, factory)
         LOGGER.debug("Registered extension '$RELEASE_EXTENSION_NAME'")
 
         def releaseTask = project.tasks.create(RELEASE_TASK_NAME, ReleaseTask.class)

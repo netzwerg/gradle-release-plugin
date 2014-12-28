@@ -15,18 +15,36 @@
  */
 package ch.netzwerg.gradle.release
 
+import org.gradle.api.NamedDomainObjectContainer
+
 class ReleaseExtension {
 
     private static final DEFAULT_DEPENDS_ON = Collections.singletonList('build')
     private static final DEFAULT_PUSH = false
     private static final DEFAULT_SUFFIX = '-SNAPSHOT'
 
+    final NamedDomainObjectContainer<? extends Publication> publications
+    final PublicationFactory factory
+
     List<Object> dependsOn = DEFAULT_DEPENDS_ON
     boolean push = DEFAULT_PUSH
     String suffix = DEFAULT_SUFFIX
 
+    ReleaseExtension(publications, factory) {
+        this.publications = publications
+        this.factory = factory
+    }
+
     public void dependsOn(Object... paths) {
         this.dependsOn = Arrays.asList(paths)
+    }
+
+    def publications(Closure closure) {
+        publications.configure(closure)
+    }
+
+    def getPublicationByName(String name) {
+        return publications.getByName(name)
     }
 
 }
