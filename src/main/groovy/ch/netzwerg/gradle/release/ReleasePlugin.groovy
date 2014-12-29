@@ -23,11 +23,11 @@ import org.slf4j.LoggerFactory
 
 class ReleasePlugin implements Plugin<Project> {
 
-    private static final LOGGER = LoggerFactory.getLogger(ReleasePlugin.class)
+    public static final String VERSION_FILE_NAME = 'version.txt'
+    public static final String RELEASE_TASK_NAME = 'release'
+    public static final String RELEASE_EXTENSION_NAME = 'release'
 
-    static final VERSION_FILE_NAME = 'version.txt'
-    static final RELEASE_TASK_NAME = 'release'
-    static final RELEASE_EXTENSION_NAME = 'release'
+    private static final LOGGER = LoggerFactory.getLogger(ReleasePlugin.class)
 
     @Override
     void apply(Project project) {
