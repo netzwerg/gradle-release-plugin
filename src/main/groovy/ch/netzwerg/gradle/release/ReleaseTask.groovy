@@ -25,7 +25,7 @@ class ReleaseTask extends DefaultTask {
 
     private static final LOGGER = LoggerFactory.getLogger(ReleaseTask.class)
 
-    static final RELEASE_TASK_DESC = 'Creates a tagged non-SNAPSHOT release'
+    static final RELEASE_TASK_DESC = 'Creates a tagged non-SNAPSHOT release.'
 
     ReleaseTask() {
         description = RELEASE_TASK_DESC
