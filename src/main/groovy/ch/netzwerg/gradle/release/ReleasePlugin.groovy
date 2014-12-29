@@ -15,6 +15,8 @@
  */
 package ch.netzwerg.gradle.release
 
+import ch.netzwerg.gradle.release.pub.Publication
+import ch.netzwerg.gradle.release.pub.PublicationFactory
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.slf4j.LoggerFactory
