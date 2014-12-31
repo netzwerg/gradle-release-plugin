@@ -98,4 +98,4 @@ Uses Etienne Studer's excellent [plugindev](https://github.com/etiennestuder/gra
 
 This plugin is available under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
 
-(c) by Rahel Lüthy
+&copy; by Rahel Lüthy
