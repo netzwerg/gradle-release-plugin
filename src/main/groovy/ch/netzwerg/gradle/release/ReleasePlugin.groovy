@@ -33,11 +33,11 @@ class ReleasePlugin implements Plugin<Project> {
     void apply(Project project) {
         def factory = new PublicationFactory()
         def publications = project.container(Publication, factory)
+        LOGGER.debug("Registering extension '$RELEASE_EXTENSION_NAME'")
         def releaseExtension = project.extensions.create(RELEASE_EXTENSION_NAME, ReleaseExtension, publications, factory)
-        LOGGER.debug("Registered extension '$RELEASE_EXTENSION_NAME'")
 
+        LOGGER.debug("Registering task '$RELEASE_TASK_NAME'")
         def releaseTask = project.tasks.create(RELEASE_TASK_NAME, ReleaseTask.class)
-        LOGGER.debug("Registered task '$RELEASE_TASK_NAME'")
         releaseTask.dependsOn({ releaseExtension.dependsOn })
 
         project.ext.versionFile = project.file(VERSION_FILE_NAME)
@@ -45,9 +45,12 @@ class ReleasePlugin implements Plugin<Project> {
 
         project.afterEvaluate {
             if (project.gradle.startParameter.taskNames.contains(RELEASE_TASK_NAME)) {
+                LOGGER.debug("Setting project.version to $project.version")
                 project.version -= releaseExtension.suffix
-                LOGGER.debug("Set project.version to $project.version")
-                project.ext.versionFile.text = project.version
+                if (!project.gradle.startParameter.dryRun) {
+                    LOGGER.debug("Updating $VERSION_FILE_NAME to $project.version")
+                    project.ext.versionFile.text = project.version
+                }
             }
         }
     }
