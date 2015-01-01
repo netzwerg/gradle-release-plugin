@@ -5,22 +5,22 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class PublicationFactoryTest {
+public class PubChannelFactoryTest {
 
     @Test
     public void createDefault() {
-        PublicationFactory factory = new PublicationFactory();
-        Publication publication = factory.create("default");
+        PubChannelFactory factory = new PubChannelFactory();
+        PubChannel publication = factory.create("default");
         assertNotNull(publication);
     }
 
     @Test
     public void createDelegated() {
-        PublicationFactory factory = new PublicationFactory();
-        final Publication publicationExtension = new Publication("extension");
-        NamedDomainObjectFactory<Publication> delegateFactory = new NamedDomainObjectFactory<Publication>() {
+        PubChannelFactory factory = new PubChannelFactory();
+        final PubChannel publicationExtension = new PubChannel("extension");
+        NamedDomainObjectFactory<PubChannel> delegateFactory = new NamedDomainObjectFactory<PubChannel>() {
             @Override
-            public Publication create(String name) {
+            public PubChannel create(String name) {
                 return publicationExtension;
             }
         };

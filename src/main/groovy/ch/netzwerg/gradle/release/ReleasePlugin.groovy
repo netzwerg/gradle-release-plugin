@@ -15,8 +15,8 @@
  */
 package ch.netzwerg.gradle.release
 
-import ch.netzwerg.gradle.release.pub.Publication
-import ch.netzwerg.gradle.release.pub.PublicationFactory
+import ch.netzwerg.gradle.release.pub.PubChannel
+import ch.netzwerg.gradle.release.pub.PubChannelFactory
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.slf4j.LoggerFactory
@@ -31,8 +31,8 @@ class ReleasePlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
-        def factory = new PublicationFactory()
-        def publications = project.container(Publication, factory)
+        def factory = new PubChannelFactory()
+        def publications = project.container(PubChannel, factory)
         LOGGER.debug("Registering extension '$RELEASE_EXTENSION_NAME'")
         def releaseExtension = project.extensions.create(RELEASE_EXTENSION_NAME, ReleaseExtension, project, publications, factory)
 

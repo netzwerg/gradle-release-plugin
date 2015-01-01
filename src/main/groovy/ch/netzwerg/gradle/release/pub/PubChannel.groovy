@@ -15,11 +15,11 @@
  */
 package ch.netzwerg.gradle.release.pub
 
-class Publication {
+class PubChannel {
 
     def name
 
-    Publication(String name) {
+    PubChannel(String name) {
         this.name = name
     }
 

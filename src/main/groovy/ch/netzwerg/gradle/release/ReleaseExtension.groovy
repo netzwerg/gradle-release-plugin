@@ -15,8 +15,8 @@
  */
 package ch.netzwerg.gradle.release
 
-import ch.netzwerg.gradle.release.pub.Publication
-import ch.netzwerg.gradle.release.pub.PublicationFactory
+import ch.netzwerg.gradle.release.pub.PubChannel
+import ch.netzwerg.gradle.release.pub.PubChannelFactory
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
 
@@ -26,17 +26,17 @@ class ReleaseExtension {
     private static final DEFAULT_PUSH = false
     private static final DEFAULT_SUFFIX = '-SNAPSHOT'
 
-    private final NamedDomainObjectContainer<? extends Publication> publications
-    private final PublicationFactory factory
+    private final NamedDomainObjectContainer<? extends PubChannel> pubChannels
+    private final PubChannelFactory factory
     private final Project project
 
     List<Object> dependsOn = DEFAULT_DEPENDS_ON
     boolean push = DEFAULT_PUSH
     String suffix = DEFAULT_SUFFIX
 
-    ReleaseExtension(Project project, publications, factory) {
+    ReleaseExtension(Project project, pubChannels, factory) {
         this.project = project
-        this.publications = publications
+        this.pubChannels = pubChannels
         this.factory = factory
     }
 
@@ -44,16 +44,16 @@ class ReleaseExtension {
         this.dependsOn = Arrays.asList(paths)
     }
 
-    def publications(Closure closure) {
-        publications.configure(closure)
+    def publish(Closure closure) {
+        pubChannels.configure(closure)
     }
 
-    def PublicationFactory getPublicationFactory() {
+    def PubChannelFactory getPubChannelFactory() {
         return factory
     }
 
-    def Collection<? extends Publication> getPublicationsByNamePrefix(String namePrefix) {
-        return publications.findAll {
+    def Collection<? extends PubChannel> getPubChannelsByNamePrefix(String namePrefix) {
+        return pubChannels.findAll {
             it.name.startsWith(namePrefix)
         }
     }
