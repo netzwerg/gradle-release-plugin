@@ -34,7 +34,7 @@ class ReleasePlugin implements Plugin<Project> {
         def factory = new PublicationFactory()
         def publications = project.container(Publication, factory)
         LOGGER.debug("Registering extension '$RELEASE_EXTENSION_NAME'")
-        def releaseExtension = project.extensions.create(RELEASE_EXTENSION_NAME, ReleaseExtension, publications, factory)
+        def releaseExtension = project.extensions.create(RELEASE_EXTENSION_NAME, ReleaseExtension, project, publications, factory)
 
         LOGGER.debug("Registering task '$RELEASE_TASK_NAME'")
         def releaseTask = project.tasks.create(RELEASE_TASK_NAME, ReleaseTask.class)

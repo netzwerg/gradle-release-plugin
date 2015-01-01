@@ -18,6 +18,7 @@ package ch.netzwerg.gradle.release
 import ch.netzwerg.gradle.release.pub.Publication
 import ch.netzwerg.gradle.release.pub.PublicationFactory
 import org.gradle.api.NamedDomainObjectContainer
+import org.gradle.api.Project
 
 class ReleaseExtension {
 
@@ -27,12 +28,14 @@ class ReleaseExtension {
 
     private final NamedDomainObjectContainer<? extends Publication> publications
     private final PublicationFactory factory
+    private final Project project
 
     List<Object> dependsOn = DEFAULT_DEPENDS_ON
     boolean push = DEFAULT_PUSH
     String suffix = DEFAULT_SUFFIX
 
-    ReleaseExtension(publications, factory) {
+    ReleaseExtension(Project project, publications, factory) {
+        this.project = project
         this.publications = publications
         this.factory = factory
     }
@@ -53,6 +56,10 @@ class ReleaseExtension {
         return publications.findAll {
             it.name.startsWith(namePrefix)
         }
+    }
+
+    def getTagName() {
+        return "v$project.version" - suffix
     }
 
 }

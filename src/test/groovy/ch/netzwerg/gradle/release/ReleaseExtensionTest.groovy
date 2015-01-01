@@ -18,9 +18,11 @@ public class ReleaseExtensionTest {
     @Before
     public void before() {
         Project project = ProjectBuilder.builder().build();
+        project.version = '1.2.3.DEV'
         PublicationFactory factory = new PublicationFactory();
         NamedDomainObjectContainer<Publication> publications = project.container(Publication.class, factory);
-        extension = new ReleaseExtension(publications, factory);
+        extension = new ReleaseExtension(project, publications, factory);
+        extension.setSuffix('.DEV')
     }
 
     @Test
@@ -39,6 +41,11 @@ public class ReleaseExtensionTest {
         assertEquals(1, extension.getPublicationsByNamePrefix('bar').size())
         assertEquals(2, extension.getPublicationsByNamePrefix('github').size())
         assertEquals(0, extension.getPublicationsByNamePrefix('baz').size())
+    }
+
+    @Test
+    public void getTagName() {
+        assertEquals('v1.2.3', extension.tagName)
     }
 
 }

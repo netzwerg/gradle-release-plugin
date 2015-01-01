@@ -34,13 +34,13 @@ class ReleaseTask extends DefaultTask {
     @TaskAction
     def release() {
         commitVersionFile("Release v$project.version")
-        String tag = createReleaseTag()
         ReleaseExtension releaseExtension = project.getExtensions().getByType(ReleaseExtension.class)
+        createReleaseTag(releaseExtension.tagName)
         String nextVersion = getNextVersion(project.version as String, releaseExtension.suffix)
         project.ext.versionFile.text = nextVersion
         commitVersionFile("Prepare next release v$nextVersion")
         if (releaseExtension.push) {
-            pushChanges(tag)
+            pushChanges(releaseExtension.tagName)
         }
     }
 
@@ -49,11 +49,9 @@ class ReleaseTask extends DefaultTask {
         git 'commit', '-m', msg, project.ext.versionFile.name
     }
 
-    def createReleaseTag() {
-        String tagName = "v$project.version"
+    def createReleaseTag(String tagName) {
         LOGGER.debug("Creating release tag: $tagName")
         git 'tag', '-a', tagName, "-m Release $tagName"
-        return tagName
     }
 
     def static getNextVersion(String currentVersion, String suffix) {
