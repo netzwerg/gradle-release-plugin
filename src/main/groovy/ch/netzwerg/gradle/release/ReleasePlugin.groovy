@@ -15,8 +15,6 @@
  */
 package ch.netzwerg.gradle.release
 
-import ch.netzwerg.gradle.release.pub.PubChannel
-import ch.netzwerg.gradle.release.pub.PubChannelFactory
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.slf4j.LoggerFactory
@@ -31,10 +29,8 @@ class ReleasePlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
-        def factory = new PubChannelFactory()
-        def publications = project.container(PubChannel, factory)
         LOGGER.debug("Registering extension '$RELEASE_EXTENSION_NAME'")
-        def releaseExtension = project.extensions.create(RELEASE_EXTENSION_NAME, ReleaseExtension, project, publications, factory)
+        def releaseExtension = project.extensions.create(RELEASE_EXTENSION_NAME, ReleaseExtension, project)
 
         LOGGER.debug("Registering task '$RELEASE_TASK_NAME'")
         def releaseTask = project.tasks.create(RELEASE_TASK_NAME, ReleaseTask.class)

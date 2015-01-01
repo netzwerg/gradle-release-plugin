@@ -15,10 +15,9 @@
  */
 package ch.netzwerg.gradle.release
 
-import ch.netzwerg.gradle.release.pub.PubChannel
-import ch.netzwerg.gradle.release.pub.PubChannelFactory
-import org.gradle.api.NamedDomainObjectContainer
+import ch.netzwerg.gradle.release.pub.PubChannelContainer
 import org.gradle.api.Project
+import org.gradle.util.ConfigureUtil
 
 class ReleaseExtension {
 
@@ -26,18 +25,16 @@ class ReleaseExtension {
     private static final DEFAULT_PUSH = false
     private static final DEFAULT_SUFFIX = '-SNAPSHOT'
 
-    private final NamedDomainObjectContainer<? extends PubChannel> pubChannels
-    private final PubChannelFactory factory
     private final Project project
+    private final PubChannelContainer channelContainer
 
     List<Object> dependsOn = DEFAULT_DEPENDS_ON
     boolean push = DEFAULT_PUSH
     String suffix = DEFAULT_SUFFIX
 
-    ReleaseExtension(Project project, pubChannels, factory) {
+    ReleaseExtension(Project project) {
         this.project = project
-        this.pubChannels = pubChannels
-        this.factory = factory
+        this.channelContainer = new PubChannelContainer()
     }
 
     def dependsOn(Object... paths) {
@@ -45,17 +42,12 @@ class ReleaseExtension {
     }
 
     def publish(Closure closure) {
-        pubChannels.configure(closure)
+        ConfigureUtil.configure(closure, channelContainer)
+        return channelContainer
     }
 
-    def PubChannelFactory getPubChannelFactory() {
-        return factory
-    }
-
-    def Collection<? extends PubChannel> getPubChannelsByNamePrefix(String namePrefix) {
-        return pubChannels.findAll {
-            it.name.startsWith(namePrefix)
-        }
+    public PubChannelContainer getPubChannels() {
+        return channelContainer;
     }
 
     def getTagName() {

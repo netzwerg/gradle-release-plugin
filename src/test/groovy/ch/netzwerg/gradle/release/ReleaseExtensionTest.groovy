@@ -1,15 +1,13 @@
 package ch.netzwerg.gradle.release
 
 import ch.netzwerg.gradle.release.pub.PubChannel
-import ch.netzwerg.gradle.release.pub.PubChannelFactory
-import org.gradle.api.NamedDomainObjectContainer
+import org.gradle.api.NamedDomainObjectFactory
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.Before
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals
-import static org.junit.Assert.assertNotNull;
 
 public class ReleaseExtensionTest {
 
@@ -19,33 +17,68 @@ public class ReleaseExtensionTest {
     public void before() {
         Project project = ProjectBuilder.builder().build();
         project.version = '1.2.3.DEV'
-        PubChannelFactory factory = new PubChannelFactory();
-        NamedDomainObjectContainer<PubChannel> publications = project.container(PubChannel.class, factory);
-        extension = new ReleaseExtension(project, publications, factory);
+        extension = new ReleaseExtension(project);
         extension.setSuffix('.DEV')
+        extension.pubChannels.registerPubChannelFactory('foo', new NamedDomainObjectFactory<PubChannel>() {
+            @Override
+            PubChannel create(String name) {
+                return new FooPubChannel(name)
+            }
+        })
+        extension.pubChannels.registerPubChannelFactory('bar', new NamedDomainObjectFactory<PubChannel>() {
+            @Override
+            PubChannel create(String name) {
+                return new BarPubChannel(name)
+            }
+        })
     }
 
     @Test
-    public void getPublicationFactory() {
-        assertNotNull(extension.getPubChannelFactory())
-    }
-
-    @Test
-    public void publications() {
+    public void publish() {
         extension.publish {
-            foo
-            githubOne
-            githubTwo
-            bar
+            foo {} // default name
+            bar('xxx') {}
+            foo('one') // without closure
+            bar {}
+            foo('two') {}
         }
-        assertEquals(1, extension.getPubChannelsByNamePrefix('bar').size())
-        assertEquals(2, extension.getPubChannelsByNamePrefix('github').size())
-        assertEquals(0, extension.getPubChannelsByNamePrefix('baz').size())
+        def fooChannels = extension.pubChannels.byChannelType('foo')
+        assertEquals(3, fooChannels.size())
+        def fooChannelIt = fooChannels.iterator()
+        assertEquals('default', fooChannelIt.next().name)
+        assertEquals('one', fooChannelIt.next().name)
+        assertEquals('two', fooChannelIt.next().name)
+
+        def barChannels = extension.pubChannels.byChannelType('bar')
+        def barChannelIt = barChannels.iterator()
+        assertEquals(2, barChannels.size())
+        assertEquals('xxx', barChannelIt.next().name)
+        assertEquals('default', barChannelIt.next().name)
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void publish_failOnDuplicate() {
+        extension.publish {
+            foo('x') {}
+            foo('x')
+        }
     }
 
     @Test
     public void getTagName() {
         assertEquals('v1.2.3', extension.tagName)
+    }
+
+    private class FooPubChannel extends PubChannel {
+        FooPubChannel(String name) {
+            super(name)
+        }
+    }
+
+    private class BarPubChannel extends PubChannel {
+        BarPubChannel(String name) {
+            super(name)
+        }
     }
 
 }
