@@ -1,7 +1,7 @@
 sudo: false
 language: groovy
 jdk:
-  - oraclejdk8
+  - oraclejdk6
 env:
   - TERM=dumb
 install:

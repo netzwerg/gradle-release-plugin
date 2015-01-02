@@ -15,13 +15,13 @@ class PubChannelContainer {
     def methodMissing(String channelType, args) {
         LOGGER.debug("PubChannelContainer channelType: $channelType , args: $args")
         String channelName = 'default'
-        Optional<Closure> closure = Optional.empty();
+        Closure closure = null
         for (Object arg : args) {
             if (arg instanceof String) {
                 channelName = arg
             }
             else if (arg instanceof Closure) {
-                closure = Optional.of(arg)
+                closure = arg
             }
         }
 
@@ -31,8 +31,8 @@ class PubChannelContainer {
         }
         PubChannel pubChannel = factories.get(channelType).create(channelName)
         channels.put(channelId, pubChannel)
-        if (closure.isPresent()) {
-            ConfigureUtil.configure(closure.get(), pubChannel)
+        if (closure != null) {
+            ConfigureUtil.configure(closure, pubChannel)
         }
     }
 
