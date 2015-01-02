@@ -35,7 +35,9 @@ class ReleasePlugin implements Plugin<Project> {
         def releaseTask = project.tasks.create(RELEASE_TASK_NAME, ReleaseTask.class)
         releaseTask.dependsOn({ releaseExtension.dependsOn })
 
+        LOGGER.debug("Initializing project.version from $releaseExtension.versionFile")
         project.version = releaseExtension.versionFile.text.trim()
+        LOGGER.debug("Set project.version to $project.version")
 
         project.afterEvaluate {
             if (project.gradle.startParameter.taskNames.contains(RELEASE_TASK_NAME)) {
