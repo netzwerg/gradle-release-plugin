@@ -33,20 +33,23 @@ class ReleaseTask extends DefaultTask {
 
     @TaskAction
     def release() {
-        commitVersionFile("Release v$project.version")
         ReleaseExtension releaseExtension = project.getExtensions().getByType(ReleaseExtension.class)
+        commitVersionFile("Release v$project.version", releaseExtension)
         createReleaseTag(releaseExtension.tagName)
         String nextVersion = getNextVersion(project.version as String, releaseExtension.suffix)
-        project.ext.versionFile.text = nextVersion
-        commitVersionFile("Prepare next release v$nextVersion")
+        releaseExtension.versionFile.text = nextVersion
+        commitVersionFile("Prepare next release v$nextVersion", releaseExtension)
         if (releaseExtension.push) {
             pushChanges(releaseExtension.tagName)
         }
     }
 
-    def commitVersionFile(String msg) {
+    def commitVersionFile(String msg, ReleaseExtension releaseExtension) {
         LOGGER.debug("Committing version file: $msg")
-        git 'commit', '-m', msg, project.ext.versionFile.name
+        LOGGER.debug("Version file path $releaseExtension.versionFile.path")
+        LOGGER.debug("Project path $project.projectDir.path")
+        String relativeVersionFile = (releaseExtension.versionFile.getPath() - project.getProjectDir().path) - File.separator
+        git 'commit', '-m', msg, relativeVersionFile
     }
 
     def createReleaseTag(String tagName) {
@@ -54,6 +57,7 @@ class ReleaseTask extends DefaultTask {
         git 'tag', '-a', tagName, "-m Release $tagName"
     }
 
+    @SuppressWarnings("GroovyAssignabilityCheck")
     def static getNextVersion(String currentVersion, String suffix) {
         String pattern = /(\d+)([^\d]*$)/
         Matcher matcher = currentVersion =~ pattern

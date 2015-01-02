@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory
 
 class ReleasePlugin implements Plugin<Project> {
 
-    public static final String VERSION_FILE_NAME = 'version.txt'
     public static final String RELEASE_TASK_NAME = 'release'
     public static final String RELEASE_EXTENSION_NAME = 'release'
 
@@ -36,16 +35,14 @@ class ReleasePlugin implements Plugin<Project> {
         def releaseTask = project.tasks.create(RELEASE_TASK_NAME, ReleaseTask.class)
         releaseTask.dependsOn({ releaseExtension.dependsOn })
 
-        project.ext.versionFile = project.file(VERSION_FILE_NAME)
-        project.version = project.ext.versionFile.text.trim()
-
         project.afterEvaluate {
+            project.version = releaseExtension.versionFile.text.trim()
             if (project.gradle.startParameter.taskNames.contains(RELEASE_TASK_NAME)) {
                 LOGGER.debug("Setting project.version to $project.version")
                 project.version -= releaseExtension.suffix
                 if (!project.gradle.startParameter.dryRun) {
-                    LOGGER.debug("Updating $VERSION_FILE_NAME to $project.version")
-                    project.ext.versionFile.text = project.version
+                    LOGGER.debug("Updating '$releaseExtension.versionFile' contents to $project.version")
+                    releaseExtension.versionFile.text = project.version
                 }
             }
         }

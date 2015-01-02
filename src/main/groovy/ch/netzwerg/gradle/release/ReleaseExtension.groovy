@@ -21,6 +21,7 @@ import org.gradle.util.ConfigureUtil
 
 class ReleaseExtension {
 
+    private static final DEFAULT_VERSION_FILE = 'version.txt'
     private static final DEFAULT_DEPENDS_ON = Collections.singletonList('build')
     private static final DEFAULT_PUSH = false
     private static final DEFAULT_SUFFIX = '-SNAPSHOT'
@@ -31,17 +32,19 @@ class ReleaseExtension {
     List<Object> dependsOn = DEFAULT_DEPENDS_ON
     boolean push = DEFAULT_PUSH
     String suffix = DEFAULT_SUFFIX
+    File versionFile
 
     ReleaseExtension(Project project) {
         this.project = project
         this.channelContainer = new PubChannelContainer()
+        this.versionFile = project.file(DEFAULT_VERSION_FILE)
     }
 
     def dependsOn(Object... paths) {
         this.dependsOn = Arrays.asList(paths)
     }
 
-    def publish(Closure closure) {
+    public PubChannelContainer publish(Closure closure) {
         ConfigureUtil.configure(closure, channelContainer)
         return channelContainer
     }
@@ -50,7 +53,7 @@ class ReleaseExtension {
         return channelContainer;
     }
 
-    def getTagName() {
+    public String getTagName() {
         return "v$project.version" - suffix
     }
 

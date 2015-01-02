@@ -8,6 +8,7 @@ import org.junit.Before
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals
+import static org.junit.Assert.assertNotNull
 
 public class ReleaseExtensionTest {
 
@@ -67,6 +68,18 @@ public class ReleaseExtensionTest {
     @Test
     public void getTagName() {
         assertEquals('v1.2.3', extension.tagName)
+    }
+
+    @Test
+    public void versionFile() {
+        assertNotNull(extension.versionFile)
+        assertEquals('version.txt', extension.versionFile.getName())
+
+        File tmpDir = File.createTempDir()
+        def customVersionFileName = 'customVersionFile.txt'
+        def customVersionFile = new File(tmpDir, customVersionFileName)
+        extension.versionFile = customVersionFile
+        assertEquals(customVersionFileName, extension.versionFile.getName())
     }
 
     private class FooPubChannel extends PubChannel {

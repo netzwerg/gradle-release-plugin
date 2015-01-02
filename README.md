@@ -41,9 +41,6 @@ In addition, it provides a `release` task which:
 **Important**: The configuration phase is only executed if the `release` task is explicitly passed to Gradle as a
 start parameter.
 
-Because the `version.txt` file is well suited to be included in your final release bundle, the plugin exposes a
-handle to it via the `project.ext.versionFile` property.
-
 # Usage
 
 1. Create a `version.txt` (with e.g. `0.1.0-SNAPSHOT`) right next to your build script
@@ -84,11 +81,15 @@ following snippet illustrates all configuration options, their default values, a
 
 ```groovy
 release {
+  versionFile file('version.txt') // any file which is checked into your project's Git repo
   dependsOn build // 'distZip' could e.g be used in combination with the 'application' plugin
   push = false // 'true' would e.g. be useful when triggering the release task on a CI server
   suffix = '-SNAPSHOT' // '.DEV' or '' (empty) could be useful alternatives
 }
 ```
+
+Use `project.release.versionFile` to e.g. include the version file in your final release bundle. The VCS release
+tag can be accessed via `project.release.tagName` (read-only).
 
 # Acknowledgements
 
