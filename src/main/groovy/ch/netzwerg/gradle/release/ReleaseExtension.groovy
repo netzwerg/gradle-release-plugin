@@ -28,11 +28,11 @@ class ReleaseExtension {
 
     private final Project project
     private final PubChannelContainer channelContainer
+    private final File versionFile
 
     List<Object> dependsOn = DEFAULT_DEPENDS_ON
     boolean push = DEFAULT_PUSH
     String suffix = DEFAULT_SUFFIX
-    File versionFile
 
     ReleaseExtension(Project project) {
         this.project = project
@@ -55,6 +55,10 @@ class ReleaseExtension {
 
     public String getTagName() {
         return "v$project.version" - suffix
+    }
+
+    public File getVersionFile() {
+        return versionFile
     }
 
 }

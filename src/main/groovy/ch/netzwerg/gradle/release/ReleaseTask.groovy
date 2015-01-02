@@ -37,6 +37,7 @@ class ReleaseTask extends DefaultTask {
         commitVersionFile("Release v$project.version", releaseExtension)
         createReleaseTag(releaseExtension.tagName)
         String nextVersion = getNextVersion(project.version as String, releaseExtension.suffix)
+        LOGGER.debug("Updating '$releaseExtension.versionFile' contents to $nextVersion")
         releaseExtension.versionFile.text = nextVersion
         commitVersionFile("Prepare next release v$nextVersion", releaseExtension)
         if (releaseExtension.push) {
@@ -46,10 +47,7 @@ class ReleaseTask extends DefaultTask {
 
     def commitVersionFile(String msg, ReleaseExtension releaseExtension) {
         LOGGER.debug("Committing version file: $msg")
-        LOGGER.debug("Version file path $releaseExtension.versionFile.path")
-        LOGGER.debug("Project path $project.projectDir.path")
-        String relativeVersionFile = (releaseExtension.versionFile.getPath() - project.getProjectDir().path) - File.separator
-        git 'commit', '-m', msg, relativeVersionFile
+        git 'commit', '-m', msg, releaseExtension.versionFile.name
     }
 
     def createReleaseTag(String tagName) {

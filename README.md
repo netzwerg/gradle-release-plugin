@@ -81,15 +81,16 @@ following snippet illustrates all configuration options, their default values, a
 
 ```groovy
 release {
-  versionFile file('version.txt') // any file which is checked into your project's Git repo
   dependsOn build // 'distZip' could e.g be used in combination with the 'application' plugin
   push = false // 'true' would e.g. be useful when triggering the release task on a CI server
   suffix = '-SNAPSHOT' // '.DEV' or '' (empty) could be useful alternatives
 }
 ```
 
-Use `project.release.versionFile` to e.g. include the version file in your final release bundle. The VCS release
-tag can be accessed via `project.release.tagName` (read-only).
+# Read-Only Properties
+
+Use `project.release.versionFile` to e.g. include the `version.txt` file in your final release bundle. The VCS release
+tag can be accessed via `project.release.tagName`.
 
 # Acknowledgements
 

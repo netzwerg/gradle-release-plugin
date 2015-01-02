@@ -74,12 +74,6 @@ public class ReleaseExtensionTest {
     public void versionFile() {
         assertNotNull(extension.versionFile)
         assertEquals('version.txt', extension.versionFile.getName())
-
-        File tmpDir = File.createTempDir()
-        def customVersionFileName = 'customVersionFile.txt'
-        def customVersionFile = new File(tmpDir, customVersionFileName)
-        extension.versionFile = customVersionFile
-        assertEquals(customVersionFileName, extension.versionFile.getName())
     }
 
     private class FooPubChannel extends PubChannel {
