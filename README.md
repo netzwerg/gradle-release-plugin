@@ -3,11 +3,17 @@ gradle-release-plugin [![Build Status](https://travis-ci.org/netzwerg/gradle-rel
 
 Gradle plugin providing very minimal release version numbering.
 
+In contrast to other release plugins which offer a wealth of features and configuration
+options, this plugin is intentionally kept simple.
+
+Additional functionality can be added via composition:
+
+* [gradle-release-pub-plugin](https://github.com/netzwerg/gradle-release-pub-plugin): Adds release publication
+channels, e.g. to create a GitHub release via official REST API
+
 # Introduction
 
 The plugin assumes a `MAJOR.MINOR.PATCH[-SNAPSHOT]` version pattern kept in a `version.txt` file.
-In contrast to other release plugins which offer a wealth of features and configuration
-options, this plugin is intentionally kept simple.
 
 It does two things:
 
