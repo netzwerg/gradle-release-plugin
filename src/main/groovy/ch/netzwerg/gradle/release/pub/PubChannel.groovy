@@ -17,7 +17,7 @@ package ch.netzwerg.gradle.release.pub
 
 class PubChannel {
 
-    def name
+    String name
 
     PubChannel(String name) {
         this.name = name
