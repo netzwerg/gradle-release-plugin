@@ -24,8 +24,8 @@ class ReleaseExtension {
     private static final DEFAULT_VERSION_FILE = 'version.txt'
     private static final DEFAULT_DEPENDS_ON = Collections.singletonList('build')
     private static final DEFAULT_PUSH = false
-	private static final DEFAULT_PREFIX = ''
-    private static final DEFAULT_SUFFIX = '-SNAPSHOT'
+	private static final DEFAULT_TAG_PREFIX = 'v'
+    private static final DEFAULT_VERSION_SUFFIX = '-SNAPSHOT'
 
     private final Project project
     private final PubChannelContainer channelContainer
@@ -33,8 +33,8 @@ class ReleaseExtension {
 
     List<Object> dependsOn = DEFAULT_DEPENDS_ON
     boolean push = DEFAULT_PUSH
-	String prefix = DEFAULT_PREFIX
-    String suffix = DEFAULT_SUFFIX
+	String tagPrefix = DEFAULT_TAG_PREFIX
+    String versionSuffix = DEFAULT_VERSION_SUFFIX
 
     ReleaseExtension(Project project) {
         this.project = project
@@ -56,7 +56,7 @@ class ReleaseExtension {
     }
 
     public String getTagName() {
-        return prefix + ("v$project.version" - suffix)
+        return tagPrefix + "$project.version" - versionSuffix
     }
 
     public File getVersionFile() {

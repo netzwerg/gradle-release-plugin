@@ -89,7 +89,8 @@ following snippet illustrates all configuration options, their default values, a
 release {
   dependsOn build // 'distZip' could e.g be used in combination with the 'application' plugin
   push = false // 'true' would e.g. be useful when triggering the release task on a CI server
-  suffix = '-SNAPSHOT' // '.DEV' or '' (empty) could be useful alternatives
+  versionSuffix = '-SNAPSHOT' // '.DEV' or '' (empty) could be useful alternatives
+  tagPrefix = 'v' // 'r' or '' (empty) could be useful alternatives
 }
 ```
 
@@ -100,7 +101,8 @@ tag can be accessed via `project.release.tagName`.
 
 # Acknowledgements
 
-Uses Etienne Studer's excellent [plugindev](https://github.com/etiennestuder/gradle-plugindev-plugin) plugin.
+* [etiennestuder](https://github.com/etiennestuder) (underlying [plugindev](https://github.com/etiennestuder/gradle-plugindev-plugin))
+* [RichardGottschalk](https://github.com/RichardGottschalk) ([PR #16](https://github.com/netzwerg/gradle-release-plugin/pull/16))
 
 # License
 

@@ -23,7 +23,7 @@ public class ReleaseExtensionTest {
         Project project = ProjectBuilder.builder().build();
         project.version = '1.2.3.DEV'
         extension = new ReleaseExtension(project);
-        extension.setSuffix('.DEV')
+        extension.setVersionSuffix('.DEV')
 
         fooPubChannelFactory = new FooPubChannelFactory()
         extension.pubChannels.registerPubChannelFactory('foo', fooPubChannelFactory)
@@ -86,9 +86,8 @@ public class ReleaseExtensionTest {
 	
 	@Test
 	public void getTagNameWithPrefix() {
-		extension.setPrefix('myPrefix_')
-		
-		assertEquals('myPrefix_v1.2.3', extension.tagName)
+		extension.setTagPrefix('myPrefix_')
+		assertEquals('myPrefix_1.2.3', extension.tagName)
 	}
 
     @Test

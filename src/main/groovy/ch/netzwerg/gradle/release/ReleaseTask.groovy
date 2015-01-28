@@ -36,7 +36,7 @@ class ReleaseTask extends DefaultTask {
         ReleaseExtension releaseExtension = project.getExtensions().getByType(ReleaseExtension.class)
         commitVersionFile("Release v$project.version", releaseExtension)
         createReleaseTag(releaseExtension.tagName)
-        String nextVersion = getNextVersion(project.version as String, releaseExtension.suffix)
+        String nextVersion = getNextVersion(project.version as String, releaseExtension.versionSuffix)
         LOGGER.debug("Updating '$releaseExtension.versionFile' contents to $nextVersion")
         releaseExtension.versionFile.text = nextVersion
         commitVersionFile("Prepare next release v$nextVersion", releaseExtension)

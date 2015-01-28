@@ -41,7 +41,7 @@ class ReleasePlugin implements Plugin<Project> {
 
         project.afterEvaluate {
             if (project.gradle.startParameter.taskNames.contains(RELEASE_TASK_NAME)) {
-                project.version -= releaseExtension.suffix
+                project.version -= releaseExtension.versionSuffix
                 LOGGER.debug("Set project.version to $project.version")
                 if (!project.gradle.startParameter.dryRun) {
                     LOGGER.debug("Setting '$releaseExtension.versionFile' contents to $project.version")
