@@ -56,7 +56,7 @@ class ReleaseExtension {
     }
 
     public String getTagName() {
-        return prefix - "v$project.version" - suffix
+        return prefix + ("v$project.version" - suffix)
     }
 
     public File getVersionFile() {
