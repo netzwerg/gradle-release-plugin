@@ -66,7 +66,7 @@ class ReleaseTask extends DefaultTask {
     def pushChanges(String tag) {
         LOGGER.debug('Pushing changes to repository')
         git 'push', 'origin', tag
-        git 'push', 'origin', 'master'
+        git 'push', 'origin', 'HEAD'
     }
 
     def git(Object[] arguments) {
