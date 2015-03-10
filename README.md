@@ -97,7 +97,7 @@ release {
 
 # Read-Only Properties
 
-Use `project.release.versionFile` to e.g. include the `version.txt` file in your final release bundle. The VCS release
+Use `project.release.versionFile` to e.g. include the `version.txt` file in your final release bundle. The Git release
 tag can be accessed via `project.release.tagName`.
 
 # Acknowledgements
