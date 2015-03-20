@@ -19,6 +19,8 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.slf4j.LoggerFactory
 
+import static ch.netzwerg.gradle.release.ReleaseExtension.*
+
 class ReleasePlugin implements Plugin<Project> {
 
     public static final String RELEASE_TASK_NAME = 'release'
@@ -28,6 +30,9 @@ class ReleasePlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
+
+        project.evaluationDependsOnChildren()
+
         LOGGER.debug("Registering extension '$RELEASE_EXTENSION_NAME'")
         def releaseExtension = project.extensions.create(RELEASE_EXTENSION_NAME, ReleaseExtension, project)
 
@@ -37,7 +42,6 @@ class ReleasePlugin implements Plugin<Project> {
 
         LOGGER.debug("Initializing project.version from $releaseExtension.versionFile")
         project.version = releaseExtension.versionFile.text.trim()
-        LOGGER.debug("Set project.version to $project.version")
 
         project.afterEvaluate {
             if (project.gradle.startParameter.taskNames.contains(RELEASE_TASK_NAME)) {
@@ -47,8 +51,24 @@ class ReleasePlugin implements Plugin<Project> {
                     LOGGER.debug("Setting '$releaseExtension.versionFile' contents to $project.version")
                     releaseExtension.versionFile.text = project.version
                 }
+                if (isUsingUndefinedDefaultDependsOn(project, releaseExtension)) {
+                    LOGGER.debug("Creating artificial '$DEFAULT_DEPENDS_ON_TASK_NAME' default task")
+                    def subDefaultTasks = project.subprojects.collect {
+                        it.tasks.findByPath(DEFAULT_DEPENDS_ON_TASK_NAME)
+                    }
+                    project.tasks.create(DEFAULT_DEPENDS_ON_TASK_NAME).dependsOn(subDefaultTasks);
+                }
             }
         }
+    }
+
+    private static boolean isUsingUndefinedDefaultDependsOn(Project project, ReleaseExtension releaseExtension) {
+        boolean untouchedDefaultDependsOn = DEFAULT_DEPENDS_ON == releaseExtension.dependsOn
+        untouchedDefaultDependsOn && isDefaultDependsOnUndefined(project)
+    }
+
+    private static boolean isDefaultDependsOnUndefined(Project project) {
+        project.tasks.findByName(DEFAULT_DEPENDS_ON_TASK_NAME) == null
     }
 
 }
