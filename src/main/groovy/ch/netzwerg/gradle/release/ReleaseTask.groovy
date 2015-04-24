@@ -19,8 +19,6 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 import org.slf4j.LoggerFactory
 
-import java.util.regex.Matcher
-
 class ReleaseTask extends DefaultTask {
 
     private static final LOGGER = LoggerFactory.getLogger(ReleaseTask.class)
@@ -55,12 +53,10 @@ class ReleaseTask extends DefaultTask {
         git 'tag', '-a', tagName, "-m Release $tagName"
     }
 
-    @SuppressWarnings("GroovyAssignabilityCheck")
     def static getNextVersion(String currentVersion, String suffix) {
-        String pattern = /(\d+)([^\d]*$)/
-        Matcher matcher = currentVersion =~ pattern
-        String nextVersion = matcher.replaceAll("${(matcher[0][1] as int) + 1}${matcher[0][2]}") + suffix
-        return nextVersion
+        def versionInfo = VersionUpgradeStrategyFactory.parseVersionInfo(currentVersion - suffix)
+        int nextPatch = versionInfo.patch + 1
+        "$versionInfo.major.$versionInfo.minor.$nextPatch$suffix" as String
     }
 
     def pushChanges(String tag) {

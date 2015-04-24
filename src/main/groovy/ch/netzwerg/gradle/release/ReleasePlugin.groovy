@@ -21,7 +21,17 @@ import org.slf4j.LoggerFactory
 
 class ReleasePlugin implements Plugin<Project> {
 
+    public static final String RELEASE_TASK_GROUP_NAME = 'Release'
     public static final String RELEASE_TASK_NAME = 'release'
+    public static final String RELEASE_MAJOR_VERSION_TASK_NAME = 'releaseMajorVersion'
+    public static final String RELEASE_MINOR_VERSION_TASK_NAME = 'releaseMinorVersion'
+
+    public static Map<String, String> RELEASE_TASKS = [
+            (RELEASE_TASK_NAME)              : "Creates a tagged non-SNAPSHOT release.",
+            (RELEASE_MAJOR_VERSION_TASK_NAME): 'Upgrades to next major version & creates a tagged non-SNAPSHOT release.',
+            (RELEASE_MINOR_VERSION_TASK_NAME): 'Upgrades to next minor version & creates a tagged non-SNAPSHOT release.'
+    ]
+
     public static final String RELEASE_EXTENSION_NAME = 'release'
 
     private static final LOGGER = LoggerFactory.getLogger(ReleasePlugin.class)
@@ -31,17 +41,25 @@ class ReleasePlugin implements Plugin<Project> {
         LOGGER.debug("Registering extension '$RELEASE_EXTENSION_NAME'")
         def releaseExtension = project.extensions.create(RELEASE_EXTENSION_NAME, ReleaseExtension, project)
 
-        LOGGER.debug("Registering task '$RELEASE_TASK_NAME'")
-        def releaseTask = project.tasks.create(RELEASE_TASK_NAME, ReleaseTask.class)
-        releaseTask.dependsOn({ releaseExtension.dependsOn })
+        RELEASE_TASKS.each {
+            String name = it.key
+            String description = it.value
+            LOGGER.debug("Registering task '$name'")
+            def releaseTask = project.tasks.create(name, ReleaseTask.class)
+            releaseTask.description = description
+            releaseTask.group = RELEASE_TASK_GROUP_NAME
+            releaseTask.dependsOn({ releaseExtension.dependsOn })
+        }
 
         LOGGER.debug("Initializing project.version from $releaseExtension.versionFile")
         project.version = releaseExtension.versionFile.text.trim()
         LOGGER.debug("Set project.version to $project.version")
 
         project.afterEvaluate {
-            if (project.gradle.startParameter.taskNames.contains(RELEASE_TASK_NAME)) {
-                project.version -= releaseExtension.versionSuffix
+            def taskNames = project.gradle.startParameter.taskNames
+            if (isAnyReleaseTaskCalled(taskNames)) {
+                VersionUpgradeStrategy upgradeStrategy = resolveVersionUpgradeStrategy(taskNames)
+                project.version = upgradeStrategy.getReleaseVersion((project.version - releaseExtension.versionSuffix) as String)
                 LOGGER.debug("Set project.version to $project.version")
                 if (!project.gradle.startParameter.dryRun) {
                     LOGGER.debug("Setting '$releaseExtension.versionFile' contents to $project.version")
@@ -49,6 +67,22 @@ class ReleasePlugin implements Plugin<Project> {
                 }
             }
         }
+    }
+
+    private static VersionUpgradeStrategy resolveVersionUpgradeStrategy(List<String> taskNames) {
+        if (taskNames.contains(RELEASE_MAJOR_VERSION_TASK_NAME)) {
+            return VersionUpgradeStrategyFactory.createMajorVersionUpgradeStrategy()
+        } else if (taskNames.contains(RELEASE_MINOR_VERSION_TASK_NAME)) {
+            return VersionUpgradeStrategyFactory.createMinorVersionUpgradeStrategy()
+        } else {
+            VersionUpgradeStrategyFactory.createCurrentVersionUpgradeStrategy()
+        }
+    }
+
+    private static boolean isAnyReleaseTaskCalled(List<String> taskNames) {
+        taskNames.contains(RELEASE_TASK_NAME) ||
+                taskNames.contains(RELEASE_MINOR_VERSION_TASK_NAME) ||
+                taskNames.contains(RELEASE_MAJOR_VERSION_TASK_NAME)
     }
 
 }
