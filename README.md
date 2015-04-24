@@ -95,6 +95,10 @@ release {
 }
 ```
 
+**Note:** In multi-projects scenarios, the root project usually does not have a `build` task. Consequently, the
+`release` task will fail with its current default settings. Please use `release.dependsOn subprojects.build` (**after**
+the `subprojects` block) to work around [this issue](https://github.com/netzwerg/gradle-release-plugin/issues/19). 
+
 # Read-Only Properties
 
 Use `project.release.versionFile` to e.g. include the `version.txt` file in your final release bundle. The Git release
