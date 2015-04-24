@@ -21,12 +21,10 @@ import org.gradle.util.ConfigureUtil
 
 class ReleaseExtension {
 
-    public static final String DEFAULT_DEPENDS_ON_TASK_NAME = 'build'
-    public static final DEFAULT_DEPENDS_ON = Collections.singletonList(DEFAULT_DEPENDS_ON_TASK_NAME)
-
     private static final DEFAULT_VERSION_FILE = 'version.txt'
+    private static final DEFAULT_DEPENDS_ON = Collections.singletonList('build')
     private static final DEFAULT_PUSH = false
-    private static final DEFAULT_TAG_PREFIX = 'v'
+	private static final DEFAULT_TAG_PREFIX = 'v'
     private static final DEFAULT_VERSION_SUFFIX = '-SNAPSHOT'
 
     private final Project project
