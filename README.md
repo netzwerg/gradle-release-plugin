@@ -8,9 +8,9 @@ The plugin assumes a `MAJOR.MINOR.PATCH[-SNAPSHOT]` version pattern kept in a `v
 It provides the following functionality:
 * Initializes `project.version` from `version.txt`
 * Offers tasks for different release strategies:
-** `release` - Creates a tagged non-SNAPSHOT release (using the current version as specified in the `version.txt` file)
-** `releaseMajorVersion` - Upgrades to next major version & creates a tagged non-SNAPSHOT release.
-** `releaseMinorVersion` - Upgrades to next minor version & creates a tagged non-SNAPSHOT release.
+  * `release` - Creates a tagged non-SNAPSHOT release (using the current version as specified in the `version.txt` file)
+  * `releaseMajorVersion` - Upgrades to next major version & creates a tagged non-SNAPSHOT release.
+  * `releaseMinorVersion` - Upgrades to next minor version & creates a tagged non-SNAPSHOT release.
 * Prepares `version.txt` for next SNAPSHOT iteration (i.e. bumps PATCH portion)
 
 # Usage
