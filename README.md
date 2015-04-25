@@ -3,50 +3,15 @@ gradle-release-plugin [![Build Status](https://travis-ci.org/netzwerg/gradle-rel
 
 Gradle plugin providing very minimal release version numbering.
 
-In contrast to other release plugins which offer a wealth of features and configuration
-options, this plugin is intentionally kept simple.
-
-Additional functionality can be added via composition:
-
-* [gradle-release-pub-plugin](https://github.com/netzwerg/gradle-release-pub-plugin): Adds release publication
-channels, e.g. to create a GitHub release via official REST API
-
-# Introduction
-
 The plugin assumes a `MAJOR.MINOR.PATCH[-SNAPSHOT]` version pattern kept in a `version.txt` file.
 
-It does two things:
-
-* Initialization of `project.version` from `version.txt` file
-* Creation of tagged non-SNAPSHOT release (including preparation of `version.txt` for next `SNAPSHOT` iteration)
-
-Because the plugin only increments the `PATCH` portion of the version, it runs non-interactively and is well suited
-for continuous integration.
-
-# Details
-
-When applied, the plugin initializes the `project.version` according to the contents of a `version.txt` file (e.g.
-`0.0.1-SNAPSHOT`).
-
-In addition, it provides a `release` task which:
-
-(During configuration phase)
-
-* Removes potential `-SNAPSHOT` postfix (e.g. `0.0.1`)
-* Updates `project.version` accordingly
-* Updates `version.txt` accordingly
-
-(During execution phase)
-
-* Commits modified `version.txt`
-* Tags Git repo (e.g. `v0.0.1`)
-* Increments version number in `version.txt` to next SNAPSHOT (e.g. `0.0.2-SNAPSHOT`)
-* Again commits modified `version.txt`
-* Optionally pushes changes to Git remote. Internally calls `git push origin HEAD`, which semantically corresponds to
-  releasing the current branch.
-
-**Important**: The configuration phase is only executed if the `release` task is explicitly passed to Gradle as a
-start parameter.
+It provides the following functionality:
+* Initializes `project.version` from `version.txt`
+* Offers tasks for different release strategies:
+** `release` - Creates a tagged non-SNAPSHOT release (using the current version as specified in the `version.txt` file)
+** `releaseMajorVersion` - Upgrades to next major version & creates a tagged non-SNAPSHOT release.
+** `releaseMinorVersion` - Upgrades to next minor version & creates a tagged non-SNAPSHOT release.
+* Prepares `version.txt` for next SNAPSHOT iteration (i.e. bumps PATCH portion)
 
 # Usage
 
@@ -81,6 +46,29 @@ buildscript {
 apply plugin: 'ch.netzwerg.release'
 ```
 
+# Details
+
+During the **application** phase, the plugin initializes the `project.version` according to the contents of a
+`version.txt` file (e.g. `1.2.3-SNAPSHOT`).
+
+During the **configuration** phase, the plugin checks if any of the `releaseXXX` tasks is called **explicitly**. It
+then upgrades the `project.version` and `version.txt` contents according to the following strategies:
+
+* Task `release`: Remove `-SNAPSHOT` from current version (e.g. `1.2.3`)
+* Task `releaseMajorVersion`: Upgrade to next major version (e.g. `2.0.0`)
+* Task `releaseMinorVersion`: Upgrade to next minor version (e.g. `1.3.0`)
+
+During the **execution** phase, the `releaseXXX` tasks tag the Git repository and prepare the `version.txt` contents
+for the next `SNAPSHOT` iteration. The tasks perform the following steps:
+
+* Commit modified `version.txt`
+* Tag Git repo (e.g. `v1.2.3`)
+* Increment version number in `version.txt` to next SNAPSHOT (e.g. `1.2.4-SNAPSHOT`)
+* Again commit modified `version.txt`
+* Optionally push changes to Git remote (works from any branch)
+
+Note that all `releaseXXX` tasks run non-interactively and are thus well suited for continuous integration.
+
 # Configuration
 
 This plugin follows a "no surprise" policy. Consequently, no configuration is needed in the majority of cases. The
@@ -96,8 +84,9 @@ release {
 ```
 
 **Note:** In multi-projects scenarios, the root project usually does not have a `build` task. Consequently, the
-`release` task will fail with its current default settings. Please use `release.dependsOn subprojects.build` (**after**
-the `subprojects` block) to work around [this issue](https://github.com/netzwerg/gradle-release-plugin/issues/19). 
+`release` task will fail with its current default settings. Please use `release.dependsOn subprojects.build`
+(**after** the `subprojects` block) to work around
+[this issue](https://github.com/netzwerg/gradle-release-plugin/issues/19). 
 
 # Read-Only Properties
 
