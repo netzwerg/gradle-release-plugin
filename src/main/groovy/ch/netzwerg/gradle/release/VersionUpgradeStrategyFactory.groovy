@@ -31,30 +31,39 @@ final class VersionUpgradeStrategyFactory {
         throw new GradleException("Invalid version '$version' (could not parse '$part' part as int)", nfe);
     }
 
-    public static VersionUpgradeStrategy createMajorVersionUpgradeStrategy() {
+    public static VersionUpgradeStrategy createMajorVersionUpgradeStrategy(String versionSuffix) {
         return new VersionUpgradeStrategy() {
             @Override
-            String getReleaseVersion(String currentVersion) {
-                VersionInfo info = parseVersionInfo(currentVersion)
+            String getVersion(String currentVersion) {
+                VersionInfo info = parseVersionInfo(currentVersion - versionSuffix)
                 (info.major + 1) + ".0.0"
             }
         }
     }
 
-    public static VersionUpgradeStrategy createMinorVersionUpgradeStrategy() {
+    public static VersionUpgradeStrategy createMinorVersionUpgradeStrategy(String versionSuffix) {
         return new VersionUpgradeStrategy() {
             @Override
-            String getReleaseVersion(String currentVersion) {
-                VersionInfo info = parseVersionInfo(currentVersion)
+            String getVersion(String currentVersion) {
+                VersionInfo info = parseVersionInfo(currentVersion - versionSuffix)
                 "$info.major." + (info.minor + 1) + ".0"
             }
         }
     }
 
-    public static VersionUpgradeStrategy createCurrentVersionUpgradeStrategy() {
+    public static VersionUpgradeStrategy createPatchVersionUpgradeStrategy(String versionSuffix) {
         return new VersionUpgradeStrategy() {
             @Override
-            String getReleaseVersion(String currentVersion) {
+            String getVersion(String currentVersion) {
+                currentVersion - versionSuffix
+            }
+        }
+    }
+
+    public static VersionUpgradeStrategy createSnapshotVersionUpgradeStrategy() {
+        return new VersionUpgradeStrategy() {
+            @Override
+            String getVersion(String currentVersion) {
                 currentVersion
             }
         }

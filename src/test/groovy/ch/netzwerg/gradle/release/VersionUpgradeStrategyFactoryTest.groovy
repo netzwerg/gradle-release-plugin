@@ -7,6 +7,8 @@ import static org.junit.Assert.assertEquals
 
 class VersionUpgradeStrategyFactoryTest {
 
+    private static final String SUFFIX = '-SNAPSHOT'
+
     @Test
     public void parseVersionInfo() {
         def info = VersionUpgradeStrategyFactory.parseVersionInfo("1.2.3")
@@ -22,20 +24,26 @@ class VersionUpgradeStrategyFactoryTest {
 
     @Test
     public void createMajorVersionUpgradeStrategy() {
-        def strategy = VersionUpgradeStrategyFactory.createMajorVersionUpgradeStrategy();
-        assertEquals("2.0.0", strategy.getReleaseVersion("1.2.3"))
+        def strategy = VersionUpgradeStrategyFactory.createMajorVersionUpgradeStrategy(SUFFIX);
+        assertEquals("2.0.0", strategy.getVersion("1.2.3-SNAPSHOT"))
     }
 
     @Test
     public void createMinorVersionUpgradeStrategy() {
-        def strategy = VersionUpgradeStrategyFactory.createMinorVersionUpgradeStrategy();
-        assertEquals("1.3.0", strategy.getReleaseVersion("1.2.3"))
+        def strategy = VersionUpgradeStrategyFactory.createMinorVersionUpgradeStrategy(SUFFIX);
+        assertEquals("1.3.0", strategy.getVersion("1.2.3-SNAPSHOT"))
     }
 
     @Test
-    public void createCurrentVersionUpgradeStrategy() {
-        def strategy = VersionUpgradeStrategyFactory.createCurrentVersionUpgradeStrategy();
-        assertEquals("1.2.3", strategy.getReleaseVersion("1.2.3"))
+    public void createPatchVersionUpgradeStrategy() {
+        def strategy = VersionUpgradeStrategyFactory.createPatchVersionUpgradeStrategy(SUFFIX);
+        assertEquals("1.2.3", strategy.getVersion("1.2.3-SNAPSHOT"))
+    }
+
+    @Test
+    public void createSnapshotVersionUpgradeStrategy() {
+        def strategy = VersionUpgradeStrategyFactory.createSnapshotVersionUpgradeStrategy();
+        assertEquals("1.2.3-SNAPSHOT", strategy.getVersion("1.2.3-SNAPSHOT"))
     }
 
 }

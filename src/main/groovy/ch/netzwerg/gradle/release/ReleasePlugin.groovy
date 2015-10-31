@@ -51,38 +51,30 @@ class ReleasePlugin implements Plugin<Project> {
             releaseTask.dependsOn({ releaseExtension.dependsOn })
         }
 
-        LOGGER.debug("Initializing project.version from $releaseExtension.versionFile")
-        project.version = releaseExtension.versionFile.text.trim()
-        LOGGER.debug("Set project.version to $project.version")
+        def versionFromFile = releaseExtension.versionFile.text.trim()
+        def taskNames = project.gradle.startParameter.taskNames
 
-        project.afterEvaluate {
-            def taskNames = project.gradle.startParameter.taskNames
-            if (isAnyReleaseTaskCalled(taskNames)) {
-                VersionUpgradeStrategy upgradeStrategy = resolveVersionUpgradeStrategy(taskNames)
-                project.version = upgradeStrategy.getReleaseVersion((project.version - releaseExtension.versionSuffix) as String)
-                LOGGER.debug("Set project.version to $project.version")
-                if (!project.gradle.startParameter.dryRun) {
-                    LOGGER.debug("Setting '$releaseExtension.versionFile' contents to $project.version")
-                    releaseExtension.versionFile.text = project.version
-                }
-            }
+        VersionUpgradeStrategy upgradeStrategy = resolveVersionUpgradeStrategy(taskNames, releaseExtension.versionSuffix)
+        def releaseVersion = upgradeStrategy.getVersion(versionFromFile)
+        LOGGER.debug("Using release version '$releaseVersion'")
+        if (!project.gradle.startParameter.dryRun && (versionFromFile != releaseVersion)) {
+            LOGGER.debug("Writing release version '$releaseVersion' to file '$releaseExtension.versionFile'")
+            releaseExtension.versionFile.text = releaseVersion
         }
+        LOGGER.debug("Setting project version to release version '$releaseVersion'")
+        project.version = releaseVersion
     }
 
-    private static VersionUpgradeStrategy resolveVersionUpgradeStrategy(List<String> taskNames) {
+    private static VersionUpgradeStrategy resolveVersionUpgradeStrategy(List<String> taskNames, String versionSuffix) {
         if (taskNames.contains(RELEASE_MAJOR_VERSION_TASK_NAME)) {
-            return VersionUpgradeStrategyFactory.createMajorVersionUpgradeStrategy()
+            return VersionUpgradeStrategyFactory.createMajorVersionUpgradeStrategy(versionSuffix)
         } else if (taskNames.contains(RELEASE_MINOR_VERSION_TASK_NAME)) {
-            return VersionUpgradeStrategyFactory.createMinorVersionUpgradeStrategy()
+            return VersionUpgradeStrategyFactory.createMinorVersionUpgradeStrategy(versionSuffix)
+        } else if (taskNames.contains(RELEASE_TASK_NAME)) {
+            return VersionUpgradeStrategyFactory.createPatchVersionUpgradeStrategy(versionSuffix)
         } else {
-            VersionUpgradeStrategyFactory.createCurrentVersionUpgradeStrategy()
+            return VersionUpgradeStrategyFactory.createSnapshotVersionUpgradeStrategy()
         }
-    }
-
-    private static boolean isAnyReleaseTaskCalled(List<String> taskNames) {
-        taskNames.contains(RELEASE_TASK_NAME) ||
-                taskNames.contains(RELEASE_MINOR_VERSION_TASK_NAME) ||
-                taskNames.contains(RELEASE_MAJOR_VERSION_TASK_NAME)
     }
 
 }
