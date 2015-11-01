@@ -2,33 +2,29 @@ package ch.netzwerg.gradle.release
 
 import org.gradle.api.GradleException
 
-@SuppressWarnings("GroovyAssignabilityCheck")
 final class VersionUpgradeStrategyFactory {
 
     public static VersionInfo parseVersionInfo(String version) {
-        def (majorPart, minorPart, patchPart) = version.tokenize('.')
+        def (String majorPart, String minorPart, String patchPart) = version.tokenize('.')
 
         if (majorPart == null || minorPart == null || patchPart == null) {
             throw new GradleException("Invalid version '$version' (must follow 'major.minor.patch' semantics)")
         }
 
-        int major = parsePart(majorPart, version)
-        int minor = parsePart(minorPart, version)
-        int patch = parsePart(patchPart, version)
+        int major = parsePart(majorPart, version, 'major')
+        int minor = parsePart(minorPart, version, 'minor')
+        int patch = parsePart(patchPart, version, 'patch')
 
         new VersionInfo(major, minor, patch)
     }
 
-    private static int parsePart(String part, String version) {
+    private static int parsePart(String part, String version, String partName) {
         try {
             return Integer.parseInt(part)
         } catch (NumberFormatException nfe) {
-            throwParseException(version, nfe, 'major')
+            String msg = "Invalid version '$version' (could not parse $partName part of expected 'major.minor.patch' format)"
+            throw new GradleException(msg, nfe)
         }
-    }
-
-    private static void throwParseException(String version, NumberFormatException nfe, String part) {
-        throw new GradleException("Invalid version '$version' (could not parse '$part' part as int)", nfe);
     }
 
     public static VersionUpgradeStrategy createMajorVersionUpgradeStrategy(String versionSuffix) {
