@@ -30,7 +30,12 @@ plugindev {
 }
 
 bintray {
-    user = "$BINTRAY_USER"
-    key = "$BINTRAY_API_KEY"
+    dryRun = project.hasProperty('dryRun') && project.dryRun.toBoolean()
+    if (project.hasProperty('BINTRAY_USER')) {
+        user = "$BINTRAY_USER"
+    }
+    if (project.hasProperty('BINTRAY_API_KEY')) {
+        key = "$BINTRAY_API_KEY"
+    }
     pkg.repo = 'gradle-plugins'
 }
