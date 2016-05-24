@@ -73,7 +73,7 @@ class ReleaseTask extends DefaultTask {
             args arguments
             standardOutput output
             ignoreExitValue = true
-        }
+        }.assertNormalExitValue()
         String gitOutput = output.toString().trim()
         if (!gitOutput.isEmpty()) {
             LOGGER.debug(gitOutput)
