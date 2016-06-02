@@ -20,7 +20,7 @@ plugindev {
     pluginDescription 'Gradle plugin providing very minimal release version numbering including Git repo tagging'
     pluginImplementationClass 'ch.netzwerg.gradle.release.ReleasePlugin'
     pluginLicenses 'Apache-2.0'
-    pluginTags 'gradle', 'release'
+    pluginTags 'gradle', 'release', 'version', 'versioning', 'semver', 'semantic-versioning'
     authorId 'netzwerg'
     authorName 'Rahel Lüthy'
     authorEmail 'rahel.luethy@gmail.com'
