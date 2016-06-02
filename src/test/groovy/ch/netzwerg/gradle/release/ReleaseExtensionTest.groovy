@@ -83,12 +83,12 @@ public class ReleaseExtensionTest {
     public void getTagName() {
         assertEquals('v1.2.3', extension.tagName)
     }
-	
-	@Test
-	public void getTagNameWithPrefix() {
-		extension.setTagPrefix('myPrefix_')
-		assertEquals('myPrefix_1.2.3', extension.tagName)
-	}
+
+    @Test
+    public void getTagNameWithPrefix() {
+        extension.setTagPrefix('myPrefix_')
+        assertEquals('myPrefix_1.2.3', extension.tagName)
+    }
 
     @Test
     public void versionFile() {
