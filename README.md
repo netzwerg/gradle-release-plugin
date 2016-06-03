@@ -15,6 +15,8 @@ It provides the following functionality:
 
 # Usage
 
+**IMPORTANT:** In multi-module builds, these steps should only be performed on the **root project**
+
 1. Create a `version.txt` (with e.g. `0.1.0-SNAPSHOT`) right next to your build script
 2. Apply the plugin in your build script (see below)
 3. Call `gradle clean release`
