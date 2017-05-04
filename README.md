@@ -82,6 +82,8 @@ release {
   push = false // 'true' would e.g. be useful when triggering the release task on a CI server
   versionSuffix = '-SNAPSHOT' // '.DEV' or '' (empty) could be useful alternatives
   tagPrefix = 'v' // 'r' or '' (empty) could be useful alternatives
+  pushToBranchPrefix = null // empty or null results in pushing to current branch
+                            // nonempty creates new branch before push with name format: "$pushToBranchPrefix-$version-$versionSuffix"
 }
 ```
 

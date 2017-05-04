@@ -35,6 +35,7 @@ class ReleaseExtension {
     boolean push = DEFAULT_PUSH
     String tagPrefix = DEFAULT_TAG_PREFIX
     String versionSuffix = DEFAULT_VERSION_SUFFIX
+    String pushToBranchPrefix = null
 
     ReleaseExtension(Project project) {
         this.project = project

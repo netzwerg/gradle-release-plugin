@@ -39,7 +39,7 @@ class ReleaseTask extends DefaultTask {
         releaseExtension.versionFile.text = nextVersion
         commitVersionFile("Prepare next release v$nextVersion", releaseExtension)
         if (releaseExtension.push) {
-            pushChanges(releaseExtension.tagName)
+            pushChanges(releaseExtension)
         }
     }
 
@@ -59,8 +59,17 @@ class ReleaseTask extends DefaultTask {
         "$versionInfo.major.$versionInfo.minor.$nextPatch$suffix" as String
     }
 
-    def pushChanges(String tag) {
-        LOGGER.debug('Pushing changes to repository')
+    def pushChanges(ReleaseExtension releaseExtension) {
+        String branch = releaseExtension.pushToBranchPrefix
+        branch = branch == null || branch.isEmpty() ? null : "$branch-$releaseExtension.versionFile.text"
+        pushChanges(releaseExtension.tagName as String, branch)
+    }
+
+    def pushChanges(String tag, String newBranchName) {
+        LOGGER.debug('Pushing changes to repository' + (newBranchName == null ? "" : " on new branch: $newBranchName"))
+        if (newBranchName != null) {
+            git 'checkout', '-b', newBranchName
+        }
         git 'push', 'origin', tag
         git 'push', 'origin', 'HEAD'
     }
