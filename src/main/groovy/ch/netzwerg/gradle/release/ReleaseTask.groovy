@@ -50,7 +50,7 @@ class ReleaseTask extends DefaultTask {
 
     def createReleaseTag(String tagName) {
         LOGGER.debug("Creating release tag: $tagName")
-        git 'tag', '-a', tagName, "-m Release $tagName"
+        git 'tag', '-a', tagName, '-m', "Release $tagName"
     }
 
     def static getNextVersion(String currentVersion, String suffix) {
