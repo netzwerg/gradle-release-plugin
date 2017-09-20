@@ -45,12 +45,16 @@ class ReleaseTask extends DefaultTask {
 
     def commitVersionFile(String msg, ReleaseExtension releaseExtension) {
         LOGGER.debug("Committing version file: $msg")
-        git 'commit', '-m', msg, releaseExtension.versionFile.name
+        git 'commit', '-m', formatCommitMessage(msg), releaseExtension.versionFile.name
+    }
+
+    def static formatCommitMessage(String message) {
+        "\"$message\"" as String
     }
 
     def createReleaseTag(String tagName) {
         LOGGER.debug("Creating release tag: $tagName")
-        git 'tag', '-a', tagName, "-m Release $tagName"
+        git 'tag', '-a', tagName, '-m', formatCommitMessage("Release $tagName")
     }
 
     def static getNextVersion(String currentVersion, String suffix) {
@@ -68,16 +72,19 @@ class ReleaseTask extends DefaultTask {
     def git(Object[] arguments) {
         LOGGER.debug("git $arguments")
         def output = new ByteArrayOutputStream()
-        project.exec {
+        def result = project.exec {
             executable 'git'
             args arguments
             standardOutput output
             ignoreExitValue = true
-        }.assertNormalExitValue()
+        }
+        // output result to debug
         String gitOutput = output.toString().trim()
         if (!gitOutput.isEmpty()) {
             LOGGER.debug(gitOutput)
         }
+        // check if successful after logging
+        result.assertNormalExitValue()
     }
 
 }

@@ -11,4 +11,9 @@ class ReleaseTaskTest {
         assertEquals('1.2.4-SNAPSHOT', ReleaseTask.getNextVersion('1.2.3', '-SNAPSHOT'))
     }
 
+    @Test
+    public void formatCommitMessage() {
+        assertEquals('"test 123"', ReleaseTask.formatCommitMessage('test 123'))
+    }
+
 }
