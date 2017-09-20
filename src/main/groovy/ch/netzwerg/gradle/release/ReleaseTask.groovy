@@ -72,16 +72,19 @@ class ReleaseTask extends DefaultTask {
     def git(Object[] arguments) {
         LOGGER.debug("git $arguments")
         def output = new ByteArrayOutputStream()
-        project.exec {
+        def result = project.exec {
             executable 'git'
             args arguments
             standardOutput output
             ignoreExitValue = true
-        }.assertNormalExitValue()
+        }
+        // output result to debug
         String gitOutput = output.toString().trim()
         if (!gitOutput.isEmpty()) {
             LOGGER.debug(gitOutput)
         }
+        // check if successful after logging
+        result.assertNormalExitValue()
     }
 
 }
