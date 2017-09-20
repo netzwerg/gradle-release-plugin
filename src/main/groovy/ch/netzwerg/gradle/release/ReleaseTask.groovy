@@ -45,16 +45,12 @@ class ReleaseTask extends DefaultTask {
 
     def commitVersionFile(String msg, ReleaseExtension releaseExtension) {
         LOGGER.debug("Committing version file: $msg")
-        git 'commit', '-m', formatCommitMessage(msg), releaseExtension.versionFile.name
-    }
-
-    def static formatCommitMessage(String message) {
-        "\"$message\"" as String
+        git 'commit', '-m', msg, releaseExtension.versionFile.name
     }
 
     def createReleaseTag(String tagName) {
         LOGGER.debug("Creating release tag: $tagName")
-        git 'tag', '-a', tagName, '-m', formatCommitMessage("Release $tagName")
+        git 'tag', '-a', tagName, '-m', "Release $tagName"
     }
 
     def static getNextVersion(String currentVersion, String suffix) {
