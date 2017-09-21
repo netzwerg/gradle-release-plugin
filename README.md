@@ -82,13 +82,14 @@ release {
   push = false // 'true' would e.g. be useful when triggering the release task on a CI server
   versionSuffix = '-SNAPSHOT' // '.DEV' or '' (empty) could be useful alternatives
   tagPrefix = 'v' // 'r' or '' (empty) could be useful alternatives
+  respectGitExitValue = true // defaults to *true*, can be used to ignore the exit value
 }
 ```
 
 **Note:** In multi-projects scenarios, the root project usually does not have a `build` task. Consequently, the
 `release` task will fail with its current default settings. Please use `release.dependsOn subprojects.build`
 (**after** the `subprojects` block) to work around
-[this issue](https://github.com/netzwerg/gradle-release-plugin/issues/19). 
+[this issue](https://github.com/netzwerg/gradle-release-plugin/issues/19).
 
 # Read-Only Properties
 
