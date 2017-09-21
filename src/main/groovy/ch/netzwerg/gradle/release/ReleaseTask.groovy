@@ -80,7 +80,9 @@ class ReleaseTask extends DefaultTask {
             LOGGER.debug(gitOutput)
         }
         // check if successful after logging
-        result.assertNormalExitValue()
+        if (project.getExtensions().getByType(ReleaseExtension.class).respectGitExitValue) {
+            result.assertNormalExitValue()
+        }
     }
 
 }
