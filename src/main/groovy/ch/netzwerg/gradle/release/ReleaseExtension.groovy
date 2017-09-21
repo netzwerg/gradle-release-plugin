@@ -26,6 +26,7 @@ class ReleaseExtension {
     private static final DEFAULT_PUSH = false
     private static final DEFAULT_TAG_PREFIX = 'v'
     private static final DEFAULT_VERSION_SUFFIX = '-SNAPSHOT'
+    private static final DEFAULT_RESPECT_GIT_EXIT_VALUE = true
 
     private final Project project
     private final PubChannelContainer channelContainer
@@ -35,6 +36,7 @@ class ReleaseExtension {
     boolean push = DEFAULT_PUSH
     String tagPrefix = DEFAULT_TAG_PREFIX
     String versionSuffix = DEFAULT_VERSION_SUFFIX
+    boolean respectGitExitValue = DEFAULT_RESPECT_GIT_EXIT_VALUE
 
     ReleaseExtension(Project project) {
         this.project = project
